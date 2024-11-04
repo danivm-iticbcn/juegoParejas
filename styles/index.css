@@ -1,0 +1,83 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: rgb(21, 21, 21);
+    color: white;
+    font-family: "DynaPuff", system-ui;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+/*HEADER*/
+
+h1{
+    font-size: 2em;
+}
+
+header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h5{
+    font-size: 1.5em;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#entrada-nombre{
+    font-size: 1.4em;
+    color: black;
+    width: 20vw;
+    height: 4vh;
+    box-shadow: 2px 3px 10px rgb(13, 224, 178);
+    transition-duration: 1s;
+}
+
+#entrada-nombre:hover{
+    box-shadow: 0px 2px 18px aqua;
+}
+
+#botones-container{
+    gap: 20vw;
+}
+
+button{
+    font-family: "DynaPuff", system-ui;
+    background-color: black;
+    color: white;
+    border-radius: 20px;
+    margin-top: 16px;
+    padding-block: 1vh;
+    padding-inline: 0.6vw;
+    box-shadow: 1px 1px 10px rgb(13, 224, 178);
+    transition-duration: 1s;
+}
+
+#comenzar:hover{
+    box-shadow: -6px 1px 15px aqua;
+    background-color: rgb(25, 25, 25);
+}
+
+#borrar:hover{
+    box-shadow: 6px 1px 15px aqua;
+    background-color: rgb(25, 25, 25);
+}
+
+/*MAIN*/
+main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5vh;
+    text-align: center;
+    gap: 50px;
+}

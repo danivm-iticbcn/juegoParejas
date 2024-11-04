@@ -1,0 +1,64 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: rgb(21, 21, 21);
+    color: white;
+    font-family: "DynaPuff", system-ui;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+header, main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#instruciones{
+    margin-top: 20px;
+    background-color: black;
+    color: white;
+    border-radius: 20px;
+    font-family: "DynaPuff", system-ui;
+    margin-top: 16px;
+    padding-block: 1.2vh;
+    padding-inline: 0.8vw;
+    box-shadow: 1px 1px 10px rgb(13, 224, 178);
+    transition-duration: 1s;
+}
+
+#instruciones:hover{
+    box-shadow: 1px 1px 25px aqua;
+    background-color: rgb(25, 25, 25);
+}
+
+/*Main*/
+main{
+    margin-top: 40px;
+}
+
+#parejas-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px 5px;
+    width: 70vw;
+}
+
+.pareja{
+    background-color: aqua;
+    width: 20%;
+    height: 10vh;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition-duration: 0.5s;
+}
+
+.pareja:hover{
+    background-color: rgb(1, 196, 196);
+}

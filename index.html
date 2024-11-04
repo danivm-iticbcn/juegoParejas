@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu juego de las parejas</title>
+    <link rel="stylesheet" href="styles/index.css">
+    <!-- Fuente -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&family=Jersey+10&family=Jersey+15&family=Jersey+20&family=Tiny5&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Juego de las palabras</h1>
+        <form>
+            <label for="entrada-nombre"><h3>Intoduce tu nombre:</h3></label>
+            <input type="text" id="entrada-nombre">
+            <div id="botones-container">
+                <button id="comenzar">Comenzar partida</button>
+                <button id="borrar">Eliminar partida</button>
+            </div>
+        </form>   
+    </header>
+    <main>
+        <div>
+            <h2>Puntuación actual</h2>
+            <span id="info-partida"></span>
+        </div>
+        <div>
+            <h2>Información navegador</h2>
+            <span id="info-navegador"></span>
+        </div>
+        <div>
+            <h2>Información URL</h2>
+            <span id="info-url"></span>
+        </div>
+    </main>
+    <script src="scripts/index.js"></script>
+</body>
+</html>
