@@ -1,6 +1,7 @@
 //Constsantes
 const MAX_PAREJAS = 20;
 const parejasContainer = document.getElementById('parejas-container');
+const puntosContainer = document.getElementById('puntos');
 
 //Local storage
 let nombre = localStorage.getItem('nombre');
@@ -14,6 +15,7 @@ let letrasInsertadas = [];
 let cartasLevantadasJugada = 0;
 let primeraCarta = "";
 let primeraCartaId = "";
+let puntos = 0;
 
 //Mostramos el nombre del jugador
 document.getElementById('jugador').textContent = nombre;
@@ -31,10 +33,15 @@ for (i=0; i<MAX_PAREJAS; i++){
 }
 
 //Event listener parejas
-const parejas = document.querySelectorAll('.pareja');
+function escucharParejas(){}
+let parejas = document.querySelectorAll('.pareja');
 parejas.forEach(function(element){
     element.addEventListener('click', function(){
-        jugarPareja(this.id, this.textContent);
+        //Comprobacion para cuando cambiamos el  className
+        if (this.className == 'pareja'){
+            jugarPareja(this.id, this.textContent);
+        }
+        
     })
 })
 
@@ -49,24 +56,42 @@ function jugarPareja(id, letra){
         if (letra == primeraCarta){
             parejaCorrecta(primeraCartaId, id);
         }else{
+            puntos <= 3 ? puntos = 0 : puntos -= 3;
             ocultarCartas(primeraCartaId);
             ocultarCartas(id)
         }
     }
+    actulizarDatos()
 }
 
 //FALTA HACER
 function parejaCorrecta(primeraCartaId, id){
+    let carta1 = document.getElementById(id)
+    aceptarCarta(carta1);
+    let carta2 = document.getElementById(primeraCartaId)
+    aceptarCarta(carta2);
     cartasLevantadasJugada = 0;
+    puntos += 10;
+}
+
+//Treiem la carta de la clase per que no sigui jugable
+function aceptarCarta(carta){
+    carta.classList.remove('pareja');
+    carta.style.cssText = '';
+    carta.className = 'parejaAcertada';
 }
 
 //FALTA HACER
 function ocultarCartas(id){
     cartasLevantadasJugada = 0;
     let carta = document.getElementById(id);
-    carta.style.backgroundColor = 'aqua';
-    carta.style.color = 'black';
-    carta.style.transform = 'rotateY(360deg)';
+    setTimeout(() => {
+        carta.style.backgroundColor = 'aqua';
+        carta.style.transform = 'rotateY(360deg)';
+        carta.style.cssText = '';   //Reiniciamos los elementos style
+        carta.style.color = 'transparent';
+    }, 1000);
+
 }
 
 //Funcion para girar una carta
@@ -76,6 +101,19 @@ function girarCarta(id, letra){
     carta.style.color = 'black';
     carta.style.transform = 'rotateY(360deg)';
 }
+
+//Abrimos canal de broadcast
+const canal = new BroadcastChannel('canal');
+//Funcion para enviar datos al canal
+function enviarPuntuacion(puntos) {
+    canal.postMessage({ puntos });
+}
+//Funcion para actualizar datos
+function actulizarDatos(){
+    puntosContainer.textContent = puntos;
+    enviarPuntuacion(puntos);
+}
+
 
 //Funcion para lanzar instruciones
 document.getElementById('instruciones').addEventListener('click', function(){

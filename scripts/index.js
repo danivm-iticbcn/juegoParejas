@@ -64,9 +64,22 @@ function empezarValido(){
     return false;
 }
 
+//Abrimos un canal compartido con el juego
+const canal = new BroadcastChannel('canal');
+//Funciona para recibir los datos del canal
+canal.onmessage = (event) => {
+    if (event.data && event.data.puntos) {
+         puntos = event.data.puntos;
+         actualizarPuntuaciónVista();
+    }
+};
+
+//Funcion para actulizar los datos de la partida
 function actualizarPuntuaciónVista(){
     infoPartida.textContent = `Jugador: ${nombre.value}, Puntos: ${puntos}, Estado partida ${estadoPartida}`;
 }
+
+
 
 function borrarPartida(){
     console.log('borrando')
