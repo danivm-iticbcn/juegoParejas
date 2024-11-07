@@ -41,12 +41,13 @@ function ponerValoresInicialesInfo(){
 }
 
 function empezarPartida(){
+
     //Iniciamos juego
     if (empezarValido()){
         //Cambiamos estado
         actualizarPuntuaciónVista();
-        //local storage
-        localStorage.setItem('nombre', nombre.value);
+        //Cookie para guardar el nombre de jugador
+        document.cookie = `name=${nombre.value}; expires=Thu, 14 Nov 2025 15:30:00 GMT;`;
         //Abrimos la nueva ventana
         window.open('juego.html', 'Juego de las parejas', 'width=800,height=800');
     } else{

@@ -72,3 +72,14 @@ main{
     justify-content: center;
     align-items: center;
 }
+
+.parejaEnJuego{
+    background-color: grey;
+    width: 20%;
+    height: 10vh;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition-duration: 0.5s;
+}

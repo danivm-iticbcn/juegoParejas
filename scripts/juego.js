@@ -3,8 +3,9 @@ const MAX_PAREJAS = 20;
 const parejasContainer = document.getElementById('parejas-container');
 const puntosContainer = document.getElementById('puntos');
 
-//Local storage
-let nombre = localStorage.getItem('nombre');
+//Conseguir el nombre a traves de la cookie
+let nombre = document.cookie.split(';')[0];
+nombre = nombre.split('=')[1];
 
 //Array con las parejas
 let letras = ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D', 'E', 'E', 'F', 'F', 'G', 'G', 'H', 'H', 'I', 'I', 'J', 'J'];
@@ -16,6 +17,7 @@ let cartasLevantadasJugada = 0;
 let primeraCarta = "";
 let primeraCartaId = "";
 let puntos = 0;
+let parejasCorrectas = 0;
 
 //Mostramos el nombre del jugador
 document.getElementById('jugador').textContent = nombre;
@@ -48,13 +50,16 @@ parejas.forEach(function(element){
 //Funcion que se lanza al clickar una pareja
 function jugarPareja(id, letra){
     cartasLevantadasJugada++;
-    girarCarta(id, letra)
+    mostrarCarta(id)
     if (cartasLevantadasJugada == 1){
         primeraCarta = letra;
         primeraCartaId = id;
     } else{
         if (letra == primeraCarta){
-            parejaCorrecta(primeraCartaId, id);
+            setTimeout(() => {
+                parejaCorrecta(primeraCartaId, id);
+            }, 500);
+            
         }else{
             puntos <= 3 ? puntos = 0 : puntos -= 3;
             ocultarCartas(primeraCartaId);
@@ -64,7 +69,7 @@ function jugarPareja(id, letra){
     actulizarDatos()
 }
 
-//FALTA HACER
+//Funcion para verificar que la pareja es correcta
 function parejaCorrecta(primeraCartaId, id){
     let carta1 = document.getElementById(id)
     aceptarCarta(carta1);
@@ -72,6 +77,10 @@ function parejaCorrecta(primeraCartaId, id){
     aceptarCarta(carta2);
     cartasLevantadasJugada = 0;
     puntos += 10;
+    parejasCorrectas++;
+    if (parejasCorrectas == MAX_PAREJAS/2){
+        lanzarGanar();
+    }
 }
 
 //Treiem la carta de la clase per que no sigui jugable
@@ -81,25 +90,27 @@ function aceptarCarta(carta){
     carta.className = 'parejaAcertada';
 }
 
-//FALTA HACER
+//Funcion para ocultar las cartas cuando son incorrectasl
 function ocultarCartas(id){
     cartasLevantadasJugada = 0;
     let carta = document.getElementById(id);
     setTimeout(() => {
-        carta.style.backgroundColor = 'aqua';
+        //Devolvemos la carta al tipo de carta inicial
+        carta.classList.remove('parejaEnJuego');
+        carta.style.transitionDuration = '0.5s';
         carta.style.transform = 'rotateY(360deg)';
-        carta.style.cssText = '';   //Reiniciamos los elementos style
-        carta.style.color = 'transparent';
+        carta.style.cssText = '';
+        carta.className = 'pareja';
     }, 1000);
-
+    
 }
 
-//Funcion para girar una carta
-function girarCarta(id, letra){
+//Funcion para mostrar una carta
+function mostrarCarta(id){
     let carta = document.getElementById(id);
-    carta.style.backgroundColor = 'grey';
-    carta.style.color = 'black';
     carta.style.transform = 'rotateY(360deg)';
+    carta.classList.remove('pareja');
+    carta.className = 'parejaEnJuego';
 }
 
 //Abrimos canal de broadcast
@@ -110,7 +121,7 @@ function enviarPuntuacion(puntos) {
 }
 //Funcion para actualizar datos
 function actulizarDatos(){
-    puntosContainer.textContent = puntos;
+    puntosContainer.textContent = 'Puntos: ' + puntos;
     enviarPuntuacion(puntos);
 }
 
@@ -119,3 +130,8 @@ function actulizarDatos(){
 document.getElementById('instruciones').addEventListener('click', function(){
     window.open('instruciones.html', 'Instruciones', 'width=400,height=500');
 })
+
+
+function lanzarGanar(){
+
+}
