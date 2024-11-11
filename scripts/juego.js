@@ -2,6 +2,7 @@
 const MAX_PAREJAS = 20;
 const parejasContainer = document.getElementById('parejas-container');
 const puntosContainer = document.getElementById('puntos');
+const mejorPuntuacionContainer = document.getElementById('mayor-puntuacion');
 
 //Conseguir el nombre a traves de la cookie
 let nombre = document.cookie.split(';')[0];
@@ -16,11 +17,17 @@ let letrasInsertadas = [];
 let cartasLevantadasJugada = 0;
 let primeraCarta = "";
 let primeraCartaId = "";
-let puntos = 0;
+let puntos = parseInt(localStorage.getItem('puntos'));
 let parejasCorrectas = 0;
+let enJuego = true;
+let mejorPuntuacion = parseInt(localStorage.getItem('mejorPuntuacion'));
 
 //Mostramos el nombre del jugador
 document.getElementById('jugador').textContent = nombre;
+
+if (mejorPuntuacion > 0){
+    mejorPuntuacionContainer.textContent = `Jugador: ${nombre} - PUNTOS: ${mejorPuntuacion} puntos`;
+}
 
 //Creamos los divs de cada pareja
 for (i=0; i<MAX_PAREJAS; i++){
@@ -43,7 +50,6 @@ parejas.forEach(function(element){
         if (this.className == 'pareja'){
             jugarPareja(this.id, this.textContent);
         }
-        
     })
 })
 
@@ -55,18 +61,36 @@ function jugarPareja(id, letra){
         primeraCarta = letra;
         primeraCartaId = id;
     } else{
+        bloquearActivarParejas('desactivar');
         if (letra == primeraCarta){
             setTimeout(() => {
                 parejaCorrecta(primeraCartaId, id);
+                actulizarDatos();
+                bloquearActivarParejas('activar');
             }, 500);
-            
         }else{
             puntos <= 3 ? puntos = 0 : puntos -= 3;
             ocultarCartas(primeraCartaId);
-            ocultarCartas(id)
+            ocultarCartas(id);
+            actulizarDatos();
+            bloquearActivarParejas('activar');
         }
+        
     }
-    actulizarDatos()
+}
+
+function bloquearActivarParejas(accion){
+    if (accion == "desactivar"){
+        parejas = document.querySelectorAll('.pareja')
+        parejas.forEach((element) => {
+            element.className = 'parejaFake';
+        })
+    } else{
+        parejas = document.querySelectorAll('.parejaFake')
+        parejas.forEach((element) => {
+            element.className = 'pareja';
+        })
+    }
 }
 
 //Funcion para verificar que la pareja es correcta
@@ -102,7 +126,6 @@ function ocultarCartas(id){
         carta.style.cssText = '';
         carta.className = 'pareja';
     }, 1000);
-    
 }
 
 //Funcion para mostrar una carta
@@ -115,14 +138,11 @@ function mostrarCarta(id){
 
 //Abrimos canal de broadcast
 const canal = new BroadcastChannel('canal');
-//Funcion para enviar datos al canal
-function enviarPuntuacion(puntos) {
-    canal.postMessage({ puntos });
-}
+
 //Funcion para actualizar datos
 function actulizarDatos(){
     puntosContainer.textContent = 'Puntos: ' + puntos;
-    enviarPuntuacion(puntos);
+    canal.postMessage({ puntos }); //Enviamos los puntos por el canal
 }
 
 
@@ -133,5 +153,14 @@ document.getElementById('instruciones').addEventListener('click', function(){
 
 
 function lanzarGanar(){
+    comprobarMejorPuntuacion();
+    enJuego = false;
+    canal.postMessage({ enJuego, mejorPuntuacion });
+    window.location.assign('../final.html');
+}
 
+function comprobarMejorPuntuacion(){
+    if (puntos > mejorPuntuacion){
+        mejorPuntuacion =puntos;
+    }
 }

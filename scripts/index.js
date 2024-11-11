@@ -14,6 +14,7 @@ const url = location.origin;
 let puntos = 0;
 let enJuego = false;
 let estadoPartida;
+let mejorPuntuacion = 0;
 
 //Codigo al iniciar pagina
 window.onload = function() {
@@ -29,8 +30,6 @@ window.onload = function() {
 
     //Borrar partida
     botonBorrar.addEventListener('click', borrarPartida);
-
-
 }
 
 
@@ -41,17 +40,26 @@ function ponerValoresInicialesInfo(){
 }
 
 function empezarPartida(){
-
-    //Iniciamos juego
-    if (empezarValido()){
-        //Cambiamos estado
-        actualizarPuntuaciónVista();
-        //Cookie para guardar el nombre de jugador
-        document.cookie = `name=${nombre.value}; expires=Thu, 14 Nov 2025 15:30:00 GMT;`;
-        //Abrimos la nueva ventana
-        window.open('juego.html', 'Juego de las parejas', 'width=800,height=800');
+    if (!enJuego){
+        //Iniciamos juego
+        if (empezarValido()){
+            //Cambiamos estado
+            enJuego = true;
+            puntos = 0;
+            localStorage.setItem('puntos', puntos);
+            localStorage.setItem('mejorPuntuacion', mejorPuntuacion);
+            actualizarPuntuaciónVista();
+            //Cookie para guardar el nombre de jugador
+            document.cookie = `name=${nombre.value}; expires=Thu, 14 Nov 2025 15:30:00 GMT;`;
+            //Abrimos la nueva ventana
+            partida = window.open('juego.html', 'Juego de las parejas', 'width=800,height=800');
+        } else{
+            alert('Tienes que introducir un nombre');
+        }
     } else{
-        alert('Tienes que introducir un nombre');
+        alert('Ya hay una partida en juego');
+        partidaNueva = window.open('juego.html', 'Juego de las parejas', 'width=800,height=800');
+        partidaNueva.close();
     }
 }
 
@@ -69,19 +77,30 @@ function empezarValido(){
 const canal = new BroadcastChannel('canal');
 //Funciona para recibir los datos del canal
 canal.onmessage = (event) => {
-    if (event.data && event.data.puntos) {
-         puntos = event.data.puntos;
-         actualizarPuntuaciónVista();
+    if (event.data.puntos) {
+        puntos = parseInt(event.data.puntos);
     }
+    let estadoEnJuego = event.data.enJuego;
+    if (!estadoEnJuego && estadoEnJuego != undefined){
+        enJuego = event.data.enJuego;
+        estadoPartida = 'Finalizada';
+    }
+    if (event.data.mejorPuntuacion){
+        mejorPuntuacion = parseInt(event.data.mejorPuntuacion);
+    }
+    actualizarPuntuaciónVista();
 };
 
 //Funcion para actulizar los datos de la partida
 function actualizarPuntuaciónVista(){
-    infoPartida.textContent = `Jugador: ${nombre.value}, Puntos: ${puntos}, Estado partida ${estadoPartida}`;
+    infoPartida.textContent = `Jugador: ${nombre.value}, Puntos: ${puntos}, Estado partida: ${estadoPartida}`;
 }
 
 
 
 function borrarPartida(){
-    console.log('borrando')
+    estadoPartida = 'Finalizada';
+    enJuego = false;
+    partida.close();
+    localStorage.clear();
 }

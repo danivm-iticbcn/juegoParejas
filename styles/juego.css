@@ -59,6 +59,16 @@ main{
     transition-duration: 0.5s;
 }
 
+.parejaFake{
+    background-color: aqua;
+    width: 20%;
+    height: 10vh;
+    color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .pareja:hover{
     background-color: rgb(1, 196, 196);
 }
